@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>🌿 Self-Care Chatbot 🌸</title>
+  <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    /* Global styles */
+    body {
+      font-family: 'Quicksand', sans-serif;
+      background: linear-gradient(135deg, #fcefee, #e8f5e9);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+
+    .chat-container {
+      width: 400px;
+      max-width: 90%;
+      background: #ffffff;
+      border-radius: 20px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+      display: flex;
+      flex-direction: column;
+      padding: 20px;
+    }
+
+    h2 {
+      text-align: center;
+      color: #2e7d32;
+      margin-bottom: 10px;
+    }
+
+    #chatbox {
+      height: 350px;
+      overflow-y: auto;
+      border: 1px solid #ddd;
+      padding: 15px;
+      border-radius: 15px;
+      background: #f0fff4;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-bottom: 15px;
+    }
+
+    .message {
+      padding: 10px 15px;
+      border-radius: 20px;
+      max-width: 75%;
+      word-wrap: break-word;
+      line-height: 1.4;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      animation: fadeIn 0.3s ease-in-out;
+    }
+
+    .bot {
+      background-color: #c8f0c6;
+      align-self: flex-start;
+      color: #1b5e20;
+    }
+
+    .user {
+      background-color: #ffe1f0;
+      align-self: flex-end;
+      color: #880e4f;
+    }
+
+    input {
+      flex: 1;
+      padding: 10px;
+      border-radius: 25px;
+      border: 1px solid #ccc;
+      outline: none;
+      font-size: 16px;
+    }
+
+    button {
+      padding: 10px 15px;
+      border: none;
+      border-radius: 25px;
+      background-color: #43a047;
+      color: white;
+      margin-left: 10px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: background-color 0.2s;
+    }
+
+    button:hover {
+      background-color: #2e7d32;
+    }
+
+    .input-container {
+      display: flex;
+      align-items: center;
+    }
+
+    @keyframes fadeIn {
+      from {opacity: 0;}
+      to {opacity: 1;}
+    }
+
+    /* Scrollbar styling */
+    #chatbox::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    #chatbox::-webkit-scrollbar-thumb {
+      background-color: #a5d6a7;
+      border-radius: 3px;
+    }
+  </style>
+</head>
+<body>
+  <div class="chat-container">
+    <h2>🌿 Self-Care Chatbot 🌸</h2>
+    <div id="chatbox"></div>
+    <div class="input-container">
+      <input id="userInput" type="text" placeholder="Type your message..." />
+      <button onclick="sendMessage()">Send</button>
+    </div>
+  </div>
+
+  <script>
+    // Function to add a message to the chatbox
+    function addMessage(text, className) {
+      let chatbox = document.getElementById("chatbox");
+      let message = document.createElement("div");
+      message.className = "message " + className;
+      message.innerText = text;
+      chatbox.appendChild(message);
+      chatbox.scrollTop = chatbox.scrollHeight; // Auto scroll
+    }
+
+    // Show welcome message on load
+    window.onload = function() {
+      addMessage("Hi! 🌿 Ask me about self-care tips: hydration, stress, sleep, exercise, gratitude, and more!", "bot");
+    }
+
+    // Send user input to server
+    async function sendMessage() {
+      let inputField = document.getElementById("userInput");
+      let userText = inputField.value.trim();
+      if (!userText) return;
+
+      addMessage("You: " + userText, "user");
+      inputField.value = "";
+
+      // Call backend to get response
+      try {
+        let response = await fetch("/get", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ message: userText })
+        });
+        let data = await response.json();
+        addMessage(data.response, "bot");
+      } catch (error) {
+        addMessage("Oops! Something went wrong. Try again later.", "bot");
+      }
+    }
+
+    // Press Enter to send
+    document.getElementById("userInput").addEventListener("keypress", function(e) {
+      if (e.key === "Enter") sendMessage();
+    });
+  </script>
+</body>
+</html>
