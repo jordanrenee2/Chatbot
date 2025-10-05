@@ -1,6 +1,3 @@
-# Jordan Harmon
-# Project 2: Chatbot
-# September 21, 2025
 
 from flask import Flask, request, jsonify, render_template
 import nltk
