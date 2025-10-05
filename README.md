@@ -1,5 +1,3 @@
-# Chatbot
-
 # 🌿 Self-Care Chatbot
 
 An interactive chatbot that gives self-care tips for hydration, stress, sleep, exercise, and gratitude.  
